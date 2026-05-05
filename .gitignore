@@ -1,0 +1,19 @@
+# Variables de entorno - NO SUBIR A GITHUB
+.env
+.env.local
+.env.*.local
+
+# Dependencias
+node_modules/
+
+# Archivos temporales
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Cloudflare
+.wrangler/
