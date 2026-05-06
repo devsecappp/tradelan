@@ -1,137 +1,102 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TradeLAN — Tu Copiloto de Exportación</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <title>TradeLAN - Funciona!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            background: #F0C040;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        input {
+            padding: 15px;
+            width: 300px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: none;
+        }
+        #resultado {
+            margin-top: 20px;
+            text-align: left;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            color: #F0C040;
+        }
+    </style>
 </head>
 <body>
+    <h1>🌎 TradeLAN</h1>
+    <p>Tu Copiloto de Exportación - IA para emprendedores colombianos</p>
+    
+    <input type="text" id="producto" placeholder="Ej: café, aguacate, flores...">
+    <br>
+    <button onclick="analizar()">🔍 Analizar</button>
+    
+    <div id="resultado"></div>
 
-<nav>
-  <div class="logo">
-    🌎 Trade<span class="gold-text">LAN</span>
-    <span class="nav-badge">IA</span>
-  </div>
-  <div class="nav-right">
-    <span>🇨🇴</span> Hecho para emprendedores colombianos
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="hero-eyebrow"><span class="dot"></span>Inteligencia Artificial para exportar</div>
-  <h1>
-    <span class="line1">Lleva tu producto</span>
-    <span class="line2">al mejor mercado</span>
-    <span class="line3">del mundo</span>
-  </h1>
-  <p class="hero-sub">
-    Descubre en segundos qué país paga más por tu producto, cómo transportarlo, qué documentos necesitas y cuándo es la mejor temporada para exportar.
-  </p>
-  <div class="hero-stats">
-    <div class="hero-stat"><strong>180+</strong><span>mercados analizados</span></div>
-    <div class="hero-stat"><strong>0%</strong><span>arancel con TLC</span></div>
-    <div class="hero-stat"><strong>IA</strong><span>en tiempo real</span></div>
-    <div class="hero-stat"><strong>100%</strong><span>gratuito</span></div>
-  </div>
-
-  <div class="search-container">
-    <div class="search-label">¿Qué quieres exportar?</div>
-    <div class="search-row">
-      <input type="text" class="search-input" id="productInput"
-        placeholder="Ej: mochilas wayuu, café especial, flores, esmeraldas..."
-        onkeydown="if(event.key==='Enter') analyzeProduct()">
-      <button class="search-btn" onclick="analyzeProduct()">
-        <span>🔍</span> Analizar
-      </button>
-    </div>
-    <div class="search-examples">
-      <span>Prueba con:</span>
-      <span class="example-chip" onclick="setProduct('mochilas wayuu')">Mochilas wayuu</span>
-      <span class="example-chip" onclick="setProduct('café especial')">Café especial</span>
-      <span class="example-chip" onclick="setProduct('flores tropicales')">Flores tropicales</span>
-      <span class="example-chip" onclick="setProduct('esmeraldas')">Esmeraldas</span>
-      <span class="example-chip" onclick="setProduct('cacao fino de aroma')">Cacao</span>
-      <span class="example-chip" onclick="setProduct('aguacate hass')">Aguacate</span>
-    </div>
-  </div>
-</section>
-
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loader-wrap">
-    <div class="loader-ring"></div>
-    <div class="loader-ring-inner"></div>
-    <div class="loader-dot"></div>
-  </div>
-  <div class="loading-text">Analizando mercados</div>
-  <div class="loading-steps" id="loadingSteps">
-    <div>📊 Consultando precios internacionales...</div>
-  </div>
-</div>
-
-<section id="results">
-  <div class="results-header fade-up fade-up-1">
-    <div>
-      <div class="section-label" style="margin-bottom:8px">Análisis completado</div>
-      <div class="results-title">Mercados para <span class="product-name" id="productNameDisplay"></span></div>
-    </div>
-    <div class="results-meta" id="resultsMeta"></div>
-  </div>
-
-  <div class="map-section fade-up fade-up-2">
-    <div class="section-label">Mapa de oportunidades</div>
-    <div id="map"></div>
-  </div>
-
-  <div class="ai-analysis fade-up fade-up-2">
-    <div class="ai-header">
-      <div class="ai-avatar">🤖</div>
-      <div>
-        <div class="ai-title">Análisis TradeLAN IA</div>
-        <div class="ai-subtitle">Inteligencia Artificial · Datos en tiempo real</div>
-      </div>
-    </div>
-    <div class="ai-text" id="aiAnalysisText">Cargando análisis...</div>
-  </div>
-
-  <div class="section-label fade-up fade-up-3">Mejores mercados por rentabilidad</div>
-  <div class="markets-grid fade-up fade-up-3" id="marketsGrid"></div>
-
-  <div class="two-col fade-up fade-up-4">
-    <div class="info-card">
-      <h3><span class="icon">📅</span> Mejor temporada para exportar</h3>
-      <div id="seasonsContent"></div>
-    </div>
-    <div class="info-card">
-      <h3><span class="icon">⚓</span> Puertos y salidas desde Colombia</h3>
-      <div id="portsContent"></div>
-    </div>
-  </div>
-
-  <div class="two-col fade-up fade-up-4">
-    <div class="info-card">
-      <h3><span class="icon">🚢</span> Opciones de transporte</h3>
-      <div class="transport-list" id="transportContent"></div>
-    </div>
-    <div class="info-card">
-      <h3><span class="icon">📋</span> Documentación requerida</h3>
-      <div class="doc-list" id="docsContent"></div>
-    </div>
-  </div>
-
-  <div class="info-card fade-up fade-up-4">
-    <h3><span class="icon">💡</span> Tips clave del mercado</h3>
-    <div class="tips-grid" id="tipsContent"></div>
-  </div>
-</section>
-
-<footer>
-  TradeLAN · Impulsado por IA · Datos orientativos — consulta siempre con ProColombia y la DIAN para información oficial
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script type="module" src="/js/main.js"></script>
+    <script>
+        async function analizar() {
+            const producto = document.getElementById('producto').value;
+            if (!producto) {
+                alert('Escribe un producto');
+                return;
+            }
+            
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = '📊 Analizando mercado para ' + producto + '...';
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product: producto })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error HTTP: ' + response.status);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultadoDiv.innerHTML = '❌ Error: ' + data.error;
+                } else {
+                    const parsed = JSON.parse(data.result);
+                    resultadoDiv.innerHTML = `
+                        <h2>📊 Análisis para ${parsed.product}</h2>
+                        <p>${parsed.summary}</p>
+                        <h3>🏆 Mejores mercados:</h3>
+                        <ul>
+                            ${parsed.markets.map(m => `<li>${m.flag} <strong>${m.country}</strong>: ${m.avgPriceUSD} (${m.growthRate})</li>`).join('')}
+                        </ul>
+                        <h3>🚢 Transporte recomendado:</h3>
+                        <ul>
+                            ${parsed.transport.map(t => `<li>${t.emoji} ${t.name}: ${t.detail}</li>`).join('')}
+                        </ul>
+                    `;
+                }
+            } catch(e) {
+                resultadoDiv.innerHTML = '❌ Error: ' + e.message;
+            }
+        }
+    </script>
 </body>
 </html>
